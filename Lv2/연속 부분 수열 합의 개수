@@ -1,0 +1,26 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(vector<int> elements) {
+    int Size = 1;
+    vector<int> v;
+    //size를 1부터 최대 길이까지 계산
+    while (Size <= elements.size()) {
+        for (int i = 0; i < elements.size(); i++) {
+            int sum = 0;
+            //나머지 연산을 통해 overflow 방지
+            for (int j = 0; j < Size; j++)
+                sum += elements.at((i + j) % elements.size());
+            v.push_back(sum);
+        }
+        Size++;
+    }
+    //정렬 후 중복 제거
+    sort(v.begin(), v.end());
+    v.erase(unique(v.begin(), v.end()), v.end());
+    //중복 제거 후 모든 경우의 수(부분 수열 합 총 가짓수) 출력
+    return v.size();
+}
