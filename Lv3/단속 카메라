@@ -1,0 +1,17 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(vector<vector<int>> routes) {
+    int answer = 0, tmp = 30001;
+    sort(routes.rbegin(), routes.rend());
+    for (auto i : routes) {
+        if (tmp > i[1]) {
+            tmp = i[0];
+            answer++;
+        }
+    }
+    return answer;
+}
