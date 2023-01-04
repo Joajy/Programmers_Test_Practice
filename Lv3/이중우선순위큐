@@ -1,0 +1,36 @@
+#include <string>
+#include <vector>
+#include <set>
+#include <sstream>
+using namespace std;
+
+vector<int> solution(vector<string> operations) {
+    vector<int> answer;
+    multiset<int> s;
+    for (string op : operations) {
+        if (op.substr(0,2) == "I ") {
+            string tmp = op.substr(2, op.length() - 2);
+            istringstream iss(tmp);
+            int n;
+            iss >> dec >> n;
+            s.insert(n);
+        }
+        else if (op.substr(0, 3) == "D 1") {
+            if (s.empty()) continue;
+            s.erase(*s.rbegin());
+        }
+        else {//D -1
+            if (s.empty()) continue;
+            s.erase(*s.begin());
+        }
+    }
+    if (s.empty()) {
+        answer.push_back(0);
+        answer.push_back(0);
+    }
+    else {
+        answer.push_back(*s.rbegin());
+        answer.push_back(*s.begin());
+    }
+    return answer;
+}
