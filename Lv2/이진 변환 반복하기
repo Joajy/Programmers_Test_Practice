@@ -1,0 +1,35 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<int> solution(string s) {
+    vector<int> answer;
+    int cnt = 0, del_0 = 0;
+    while (s != "1") {
+        //0 제거 과정
+        for (int i=0;i < s.length();i++){
+            if (s[i] == '0') {
+                del_0++;
+                s = s.substr(0, i) + s.substr(i + 1, s.length());
+                i--;
+            }
+        }
+        //1로만 구성된 문자열 길이 2진수로 표현
+        int tmp = s.length();
+        s.clear();
+        while (tmp != 0) {
+            char c;
+            int m = tmp % 2;
+            c = m + 48;
+            s += c;
+            tmp /= 2;
+        }
+        cnt++;
+        //역으로 표현된 2진수를 정상으로 변환
+        reverse(s.begin(), s.end());
+    }
+    answer.push_back(cnt);
+    answer.push_back(del_0);
+    return answer;
+}
