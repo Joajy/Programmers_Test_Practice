@@ -1,0 +1,28 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(int cacheSize, vector<string> cities) {
+	if (cacheSize == 0) return 5 * cities.size();
+	vector<string> v;
+	int answer = 0;
+	for (int i = 0; i < cities.size(); i++) {
+		transform(cities[i].begin(), cities[i].end(), cities[i].begin(), ::tolower);
+		auto iter = find(v.begin(), v.end(), cities[i]);
+		//hit
+		if (iter != v.end()) {
+			answer++;
+			string tmp = *iter;
+			v.erase(iter);
+		}
+		//miss
+		else {
+			answer += 5;
+			if(cacheSize == v.size()) v.erase(v.begin());
+		}
+		v.push_back(cities[i]);
+	}
+	return answer;
+}
