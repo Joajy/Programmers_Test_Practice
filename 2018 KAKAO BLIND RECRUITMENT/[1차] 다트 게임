@@ -1,0 +1,39 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(string s) {
+    int answer = 0;
+    string tmp;
+    vector<int> score;
+    for(int i=0;i<s.length();i++){
+        if(isdigit(s[i])) tmp+=s[i];
+        else if(isalpha(s[i])){
+            score.push_back(stoi(tmp));
+            tmp.clear();
+            int idx = score.size()-1;
+            switch(s[i]){
+                case 'D': score[idx]*=score[idx]; break;
+                case 'T': score[idx]*=score[idx]*score[idx];
+            }          
+        }
+        else{
+            int idx = score.size()-1;
+            if(s[i]=='*'){
+                if(idx==0) score[0]*=2;
+                else{
+                    score[idx]*=2;
+                    score[idx-1]*=2;
+                }
+            }
+            else{
+                score[idx] = -score[idx];
+            }
+        }
+    }
+    for(int i=0;i<score.size();i++){
+        answer += score[i];
+    }
+    return answer;
+}
