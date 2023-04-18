@@ -1,0 +1,30 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+string solution(int n, int t, int m, int p) {
+    string answer = "";
+    string s;
+    int num = 1, cnt = 1;
+    s += '0';
+    while(cnt < p+m*(t-1)){
+        int tmp = num;
+        string tmpS;
+        while(tmp != 0){
+            if(tmp%n>9){
+                tmpS += char(tmp % n) - 10 + 'A';
+            }
+            else tmpS += char(tmp % n) + '0';
+            tmp /= n;
+            cnt++;
+        }        
+        num++;
+        reverse(tmpS.begin(), tmpS.end());
+        s+= tmpS;
+    }
+    for(int i = 0; i < t; i++){
+        answer += s[p + m*i-1];
+    }
+    return answer;
+}
