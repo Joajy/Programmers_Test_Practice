@@ -1,0 +1,39 @@
+#include <string>
+#include <vector>
+#include <map>
+using namespace std;
+
+int cnt = 0, i = 0;
+vector<int> answer;
+
+class Trie {
+    int idx = 0;
+    map<char, Trie*> m;
+public:
+    void insert(string s, int index, int count) {
+        if (m.find(s[index]) != m.end()) {
+            m[s[index]]->insert(s, index + 1, count + 1);
+        }
+        else {
+            m[s[index]] = new Trie();
+            m[s[index]]->idx = cnt++;
+            answer.push_back(idx);
+            i += count - 1;
+        }
+    }
+};
+
+Trie* root = new Trie();
+
+vector<int> solution(string msg) {
+    for (cnt = 1; cnt <= 26;) {
+        string tmp = "A";
+        tmp[0] += cnt - 1;
+        root->insert(tmp, 0, 0);
+        answer.pop_back();
+    }
+    for (i = 0; i < msg.length(); ++i) {
+        root->insert(msg, i, 0);
+    }
+    return answer;
+}
