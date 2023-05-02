@@ -1,0 +1,35 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool cmp(string a, string b) {
+    transform(a.begin(), a.end(), a.begin(), ::tolower);
+    transform(b.begin(), b.end(), b.begin(), ::tolower);
+    string aToken[3], bToken[3];
+    int i, j;
+    for (i = 0; i < a.length(); ++i) {
+        if (isdigit(a[i])) break;
+        aToken[0] += a[i];
+    }
+    for (j = 0; j < b.length(); ++j) {
+        if (isdigit(b[j])) break;
+        bToken[0] += b[j];
+    }
+    for (; i < a.length(); ++i) {
+        if (!isdigit(a[i])) break;
+        aToken[1] += a[i];
+    }
+    for (; j < b.length(); ++j) {
+        if (!isdigit(b[j])) break;
+        bToken[1] += b[j];
+    }
+    if (aToken[0] != bToken[0]) return aToken[0] < bToken[0];
+    return stoi(aToken[1]) < stoi(bToken[1]);
+}
+
+vector<string> solution(vector<string> files) {
+    stable_sort(files.begin(), files.end(), cmp);
+    return files;
+}
