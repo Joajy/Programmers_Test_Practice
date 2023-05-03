@@ -1,0 +1,73 @@
+#include <string>
+#include <vector>
+#define p pair<int, int>
+
+using namespace std;
+
+int dx[3]{ 1,0,1 };
+int dy[3]{ 0,1,1 };
+
+bool isRight(int n, int m, vector<string> board) {
+	for (int i = 0; i < 3; ++i) {
+		int nx = n + dx[i];
+		int ny = m + dy[i];
+		if (board[nx][ny] != board[n][m]) return false;
+	}
+	return true;
+}
+
+int delBlock(vector<p> v, vector<string> &board) {
+	int count = 0;
+	for (auto cur : v) {
+		int x = cur.first;
+		int y = cur.second;
+		if (board[x][y] != ' ') {
+			board[x][y] = ' ';
+			++count;
+		}
+		for (int i = 0; i < 3; i++) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (board[nx][ny] == ' ') continue;
+			board[nx][ny] = ' ';
+			++count;
+		}
+	}
+	return count;
+}
+
+void reArrange(int n, int m, vector<string>& board) {
+	for (int i = board.size() - 1; i >= 0 ; --i) {
+		for (int j = 0; j < board[i].length(); ++j) {
+			if (board[i][j] == ' ') continue;
+			int idx = i + 1;
+			while (idx < n && board[idx][j] == ' ') ++idx;
+			if (--idx != i) {
+				board[idx][j] = board[i][j];
+				board[i][j] = ' ';
+			}
+		}
+	}
+}
+
+int solution(int n, int m, vector<string> board) {
+	int answer = 0;
+	bool check = true;
+	while (1) {
+		check = false;
+		vector<p> v;
+		for (int i = 0; i < n - 1; ++i) {
+			for (int j = 0; j < m - 1; ++j) {
+				if (board[i][j] == ' ') continue;
+				if (isRight(i, j, board)) {
+					v.push_back({ i,j });
+					check = true;
+				}
+			}
+		}
+		if (check == false) break;
+		answer += delBlock(v, board);
+		reArrange(n, m, board);
+	}
+	return answer;
+}
