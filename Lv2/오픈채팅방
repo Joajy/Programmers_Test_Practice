@@ -1,0 +1,35 @@
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+vector<string> solution(vector<string> record) {
+    vector<string> answer, statement, nickname;
+    map<string, string> m;
+    for(string i : record){
+        string cmd = i.substr(0, 6), id="";
+        int idx = 6;
+        if(cmd == "Change") ++idx;
+        while(i[idx] != ' '){
+            if(cmd == "Leave " && i[idx] == '\0') break;
+            id += i[idx++];
+        }
+        if(cmd == "Leave "){
+            nickname.push_back(id);
+            statement.push_back("님이 나갔습니다.");
+        }
+        else if(cmd == "Enter "){
+            m[id] = i.substr(idx + 1, i.length() - idx - 1);
+            nickname.push_back(id);
+            statement.push_back("님이 들어왔습니다.");
+        }
+        else if(cmd == "Change"){
+            m[id] = i.substr(idx + 1, i.length() - idx - 1);
+        }
+    }
+    for(int i=0;i<statement.size();++i){
+        answer.push_back(m[nickname[i]] + statement[i]);
+    }
+    return answer;
+}
