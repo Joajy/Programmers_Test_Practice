@@ -1,0 +1,30 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector<int> solution(vector<int> sequence, int k) {
+    vector<int> answer;a
+    sort(sequence.begin(), sequence.end());
+    int st = 0,en = 0, size = sequence.size(), sum = sequence[0];
+    int ans1=0,ans2=1000000;
+    while(st <= en && en < size){
+        if(sum == k){
+            if(ans2 - ans1 > en - st){
+                ans1 = st;
+                ans2 = en;
+            }
+            sum -= sequence[st++];
+        }
+        else if(sum < k){
+            sum += sequence[++en];
+        }
+        else if(sum > k){
+            sum -= sequence[st++];
+        }     
+    }
+    answer.push_back(ans1);
+    answer.push_back(ans2);
+    return answer;
+}
