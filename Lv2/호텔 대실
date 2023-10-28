@@ -1,0 +1,39 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <iostream>
+
+using namespace std;
+
+int converter(string s,int add){
+    int t = 0;
+    if(isdigit(s[0])) t += 600 * (s[0] - '0');
+    if(isdigit(s[1])) t += 60 * (s[1] - '0');
+    if(isdigit(s[3])) t += 10 * (s[3] - '0');
+    if(isdigit(s[4])) t += s[4] - '0';
+    return t + add;
+}
+
+int solution(vector<vector<string>> book_time) {
+    int answer = 1;
+    sort(book_time.begin(), book_time.end());
+    vector<pair<int, int>> realTime;
+    for(int i = 0;i < book_time.size();++i){
+        int start = converter(book_time[i][0], 0);
+        int last = converter(book_time[i][1], 10);
+        realTime.push_back({start, last});
+    }
+    priority_queue<int, vector<int>, greater<int>> pq;
+    pq.push(realTime[0].second);
+    for(int i = 1;i < realTime.size();++i){
+        if(pq.top() > realTime[i].first){
+            if(pq.size() + 1> answer) answer = pq.size() + 1;
+        }
+        else{
+            pq.pop();
+        }
+        pq.push(realTime[i].second);
+    }
+    return answer;
+}
