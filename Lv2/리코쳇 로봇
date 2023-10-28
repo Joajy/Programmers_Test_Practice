@@ -1,0 +1,43 @@
+#include <string>
+#include <vector>
+#include <queue>
+#define p pair<int, int>
+
+using namespace std;
+
+int dist[101][101];
+int dx[]{0,1,0,-1};
+int dy[]{1,0,-1,0};
+p en;
+
+int solution(vector<string> board) {
+    int answer = 0;
+    queue<p> q;
+    int n = board.size(), m = board[0].length();
+    for(int i=0;i<n;++i){
+        for(int j=0;j<m;++j){
+            if(board[i][j] == 'R') q.push({i, j});
+            else if(board[i][j] == 'G') en = {i,j};
+        }
+    }
+    while(!q.empty()){
+        p cur = q.front(); q.pop();
+        int initDist = dist[cur.first][cur.second];
+        for(int dir=0;dir<4;++dir){
+            int nx = cur.first;
+            int ny = cur.second;
+            p nxt = cur;
+            while(1){
+                nx += dx[dir];
+                ny += dy[dir];
+                if(nx < 0 || ny < 0 || nx >= n || ny >= m) break;
+                if(board[nx][ny] == 'D') break;
+                nxt = {nx, ny};
+            }
+            if(dist[nxt.first][nxt.second] == 0 && nxt != cur) q.push(nxt);
+            if(dist[nxt.first][nxt.second] == 0) dist[nxt.first][nxt.second] = initDist + 1;
+        }
+    }
+    if(dist[en.first][en.second] > 0) return dist[en.first][en.second];
+    return -1;
+}
