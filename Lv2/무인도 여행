@@ -1,0 +1,46 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#define p pair<int, int>
+using namespace std;
+
+bool vis[101][101]{0};
+int area[101][101];
+int dx[]{0,1,0,-1};
+int dy[]{1,0,-1,0};
+
+vector<int> solution(vector<string> maps) {
+    vector<int> answer;
+    int n = maps.size(), m = maps[0].length();
+    for(int i = 0;i < n;++i){
+        for(int j = 0; j < m; ++j){
+            area[i][j] = maps[i][j];
+        }
+    }
+    for(int i = 0;i < n;++i){
+        for(int j = 0;j < m;++j){
+            if(vis[i][j] || area[i][j] == 'X') continue;
+            int sum = area[i][j] - '0';
+            vis[i][j] = 1;
+            queue<p> q;
+            q.push({i,j});
+            while(!q.empty()){
+                p cur = q.front(); q.pop();
+                for(int dir=0;dir<4;++dir){
+                    int nx = cur.first + dx[dir];
+                    int ny = cur.second + dy[dir];
+                    if(nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+                    if(area[nx][ny] == 'X' || vis[nx][ny]) continue;
+                    sum += area[nx][ny] - '0';
+                    vis[nx][ny] = 1;
+                    q.push({nx,ny});
+                }
+            }
+            answer.push_back(sum);
+        }
+    }
+    if(answer.empty()) return {-1};
+    sort(answer.begin(), answer.end());
+    return answer;
+}
