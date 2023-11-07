@@ -1,0 +1,59 @@
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+char area[5][5];
+int dx[]{0,1,0,-1};
+int dy[]{1,0,-1,0};
+
+struct p{
+    int x, y, dist;
+};
+
+int bfs(int i, int j){
+    bool vis[5][5]{0};
+    queue<p> q;
+    q.push({i,j,0});
+    vis[i][j] = 1;
+    while(!q.empty()){
+        p cur = q.front(); q.pop();
+        for(int dir = 0;dir < 4; ++dir){
+            int nx = cur.x + dx[dir];
+            int ny = cur.y + dy[dir];
+            int ndist = cur.dist + 1;
+            if(nx < 0 || ny < 0 || nx >= 5 || ny >= 5) continue;
+            if(area[nx][ny] == 'X' || vis[nx][ny]) continue;
+            if(area[nx][ny] == 'P' && ndist <= 2) return 0;
+            q.push({nx,ny,ndist});
+            vis[nx][ny] = 1;
+        }
+    }
+    return 1;
+}
+
+int isHappen(){
+    for(int i = 0;i < 5; ++i){
+        for(int j = 0;j < 5; ++j){
+            if(area[i][j] == 'P') {
+                if(!bfs(i, j)) return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+vector<int> solution(vector<vector<string>> places) {
+    vector<int> answer;
+    for(vector<string> place : places){
+        for(int i = 0;i < 5; ++i){
+            for(int j = 0;j < 5; ++j){
+                area[i][j] = place[i][j];
+            }
+        }
+        //함수 설정으로 리턴값 받을 수 있도록
+        answer.push_back(isHappen());
+    }
+    return answer;
+}
