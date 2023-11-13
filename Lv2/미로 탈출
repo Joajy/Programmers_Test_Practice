@@ -1,0 +1,76 @@
+#include <string>
+#include <vector>
+#include <queue>
+#define p pair<int, int>
+using namespace std;
+
+int n, m, Ldist = -1, answer = -1;
+int dist[101][101];
+char area[101][101];
+int dx[]{0,1,0,-1};
+int dy[]{1,0,-1,0};
+
+p S, E, L;
+
+void findL(){
+    int dist1[101][101];
+    bool vis[101][101]{0};
+    queue<p> q;
+    q.push(S);
+    vis[S.first][S.second] = 1;
+    while(!q.empty()){
+        p cur = q.front(); q.pop();
+        if(area[cur.first][cur.second] == 'L'){
+            Ldist = dist1[cur.first][cur.second];
+            return;
+        }
+        for(int i = 0;i < 4; ++i){
+            int nx = cur.first +dx[i];
+            int ny = cur.second + dy[i];
+            if(nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+            if(area[nx][ny] == 'X' || vis[nx][ny]) continue;
+            vis[nx][ny] = 1;
+            dist1[nx][ny] = dist1[cur.first][cur.second] + 1;
+            q.push({nx,ny});
+        }
+    }
+}
+
+void bfs(){    
+    bool vis[101][101]{0};
+    queue<p> q;
+    q.push(L);
+    vis[L.first][L.second] = 1;
+    while(!q.empty()){
+        p cur = q.front(); q.pop();
+        if(area[cur.first][cur.second] == 'E'){
+            answer = dist[cur.first][cur.second];
+            return;
+        }
+        for(int i = 0;i < 4; ++i){
+            int nx = cur.first +dx[i];
+            int ny = cur.second + dy[i];
+            if(nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+            if(area[nx][ny] == 'X' || vis[nx][ny]) continue;
+            vis[nx][ny] = 1;
+            dist[nx][ny] = dist[cur.first][cur.second] + 1;
+            q.push({nx,ny});
+        }
+    }
+}
+
+int solution(vector<string> maps) {
+    n = maps.size(), m = maps[0].length();
+    for(int i = 0;i < n;++i){
+        for(int j = 0;j < m; ++j){
+            area[i][j] = maps[i][j];
+            if(area[i][j] == 'S') S = {i,j};
+            else if(area[i][j] == 'E') E = {i,j};
+            else if(area[i][j] == 'L') L = {i,j};
+        }
+    }
+    findL();
+    bfs();
+    if(Ldist == -1 || dist[E.first][E.second] == 0) return -1;
+    return Ldist + dist[E.first][E.second];
+}
