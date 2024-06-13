@@ -1,0 +1,54 @@
+import java.util.*;
+import java.io.*;
+//6-14 00:34 ~ 1:10(36 minute)
+
+class Solution {
+    
+    static int[] fees;
+    //마지막 입차 시간, vis를 통해 출차했는지 여부 확인
+    static int[] time = new int[10000];
+    static int[] sam = new int[10000];
+    static boolean[] vis = new boolean[10000];
+    
+    public int[] solution(int[] fee, String[] records) {
+        fees = fee;
+        for(int i = 0;i < records.length; ++i){
+            StringTokenizer st = new StringTokenizer(records[i]);
+            String t = st.nextToken();
+            int hour = Integer.parseInt(t.substring(0, 2));
+            int minute = Integer.parseInt(t.substring(3, 5));
+            int curTime = hour * 60 + minute;
+            int carNum = Integer.parseInt(st.nextToken());
+            String visit = st.nextToken();
+            if(visit.equals("IN")){
+                vis[carNum] = true;
+                time[carNum] = curTime;
+            } else{
+                sum[carNum] += curTime - time[carNum];
+                vis[carNum] = false;
+            }
+        }
+        
+        //출차하지 않은 케이스에 대해 점검
+        List<Integer> list = new ArrayList<>();
+        int end = 23 * 60 + 59;
+        for(int i = 0;i < 10000; ++i){
+            if(vis[i]){
+                sum[i] += (end - time[i]);
+            }
+            if(sum[i] > 0){
+                if(sum[i] <= fees[0]) list.add(fees[1]);
+                else {
+                    if((sum[i] - fees[0]) % fees[2] == 0) list.add(fees[1] + (sum[i] - fees[0]) / fees[2] * fees[3]);
+
+                    else list.add(fees[1] + (1 + (sum[i] - fees[0]) / fees[2]) * fees[3]);
+                }
+            }
+        }
+        int[] answer = new int[list.size()];
+        for(int i = 0;i < list.size(); ++i){
+            answer[i] = list.get(i);
+        }
+        return answer;
+    }
+}
