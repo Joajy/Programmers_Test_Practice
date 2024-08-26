@@ -1,0 +1,28 @@
+import java.util.*;
+import java.io.*;
+
+class Solution {
+    public int solution(int[][] scores) {
+        int answer = 1;
+        int max = 0;
+        int sum = scores[0][0] + scores[0][1];
+        int[] w = scores[0];
+        
+        Arrays.sort(scores, (a, b) -> a[0] == b[0] ? 
+                   a[1] - b[1] : b[0] - a[0]);
+        
+        for(int[] score : scores) {
+            //어떠한 점수가 완호 점수보다 모두 클 경우
+            if(score[0] > w[0] && score[1] > w[1]) {
+                return -1;
+            } 
+            //현재 점수의 두 번째 값이 지금까지의 최대값 이상인 경우
+            else if (max <= score[1]) {
+                //완호보다 총점 높으면 등수 추가
+                if(score[0] + score[1] > sum) ++answer;
+                max = score[1];
+            }
+        }
+        return answer;
+    }
+}
