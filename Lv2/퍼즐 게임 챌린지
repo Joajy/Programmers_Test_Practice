@@ -1,0 +1,42 @@
+import java.util.*;
+
+class Solution {
+    
+    static int[] d, t;
+    static long l;
+
+//사실 더 정확하게 하기 위해서는, 시작 지점에서도 if-else 처리를 해야 한다고 생각했다.
+//다만 첫 지점에서의 else 상황인 경우 이전 시간에 대한 언급이 없으므로 0으로 감안하고 풀었다.
+    static boolean possible(int level) {
+        long limit = l - t[0];
+        for(int i = 1; i < d.length; ++i) {
+            if(d[i] <= level) limit -= t[i];
+            else limit -= (d[i] - level) * (t[i] + t[i - 1]) + t[i];
+            if(limit < 0) return false;
+        }
+        return true;
+    }
+    
+    /*
+    diff > level -> diff-level만큼 틀림, wrong * (time_cur+time_prev) + time_cur    
+    */
+    public int solution(int[] diffs, int[] times, long limit) {
+        d = diffs; t = times; l = limit;        
+        int answer = Integer.MAX_VALUE;
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for(int i : diffs) {
+            if(min > i) min = i;
+            if(max < i) max = i;
+        }
+        while(min <= max) {
+            int mid = (min + max) >> 1;
+            if(possible(mid)) {
+                answer = Math.min(answer, mid);
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }        
+        return answer;
+    }
+}
